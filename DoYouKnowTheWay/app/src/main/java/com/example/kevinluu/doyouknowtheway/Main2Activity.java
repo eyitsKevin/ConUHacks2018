@@ -102,7 +102,7 @@ public class Main2Activity extends AppCompatActivity implements Runnable{
     }
 
     // function used to run the text to speech api
-    public void runTextToSpeech(ArrayList<Information>information){
+    public static void runTextToSpeech(ArrayList<Information>information){
         TextToSpeech.setArrayList(information);
         Runnable textToSpeech = new TextToSpeech();
         Thread textToSpeechThread = new Thread(textToSpeech);
