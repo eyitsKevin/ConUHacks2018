@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -27,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private final int MY_PERMISSIONS_READ_EXTERNAL_STORAGE=1;
     private final int MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE=1;
     private final int MY_PERMISSIONS_INTERNET=1;
-    ImageView imageView;
+
     public static String bestpath;
     Button button;
     static Context context;
@@ -36,13 +35,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initialize();
-        context = getApplicationContext();
-
-        Log.d("TAGGED","OKKKKK");
-
-        button = (Button) findViewById(R.id.cameraButton);
-        imageView = (ImageView) findViewById(R.id.imageView); //gets the view of the image
+        context = getApplicationContext(); // this looks useless but without it, it breaks!!! (Error: Failure delivering result ResultInfo)
+        button = findViewById(R.id.cameraButton);
 
         getPermissions();
         button.setOnClickListener(new View.OnClickListener() {
@@ -69,14 +63,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    public static Context getApplicationContext2(){
-        return  context;
-    }
-
-    public void initialize(){
-       //service = new VisualRecognition(VisualRecognition.VERSION_DATE_2016_05_20);
     }
 
     public void getPermissions(){
@@ -164,72 +150,36 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private void showPhoneStatePermission() {
-        int permissionCheck = ContextCompat.checkSelfPermission(
-                this, Manifest.permission.READ_EXTERNAL_STORAGE);
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_PHONE_STATE)) {
-            } else {
-                requestPermission(Manifest.permission.READ_PHONE_STATE, MY_PERMISSIONS_READ_EXTERNAL_STORAGE);
-            }
-        } else {
-            Toast.makeText(MainActivity.this, "Permission (already) Granted!", Toast.LENGTH_SHORT).show();
-        }
-    }
-    private void requestPermission(String permissionName, int permissionRequestCode) {
-        ActivityCompat.requestPermissions(this,
-                new String[]{permissionName}, permissionRequestCode);
-    }
-
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_READ_EXTERNAL_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(MainActivity.this, "Permission Granted!", Toast.LENGTH_SHORT).show();
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                } else {
-                    Toast.makeText(MainActivity.this, "Permission Denied!", Toast.LENGTH_SHORT).show();
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request.
-        }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode != RESULT_CANCELED) {
             if (data != null){
-                Bundle bundle = data.getExtras();
                 Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                imageView.setImageBitmap(bitmap);
                 Uri tempUri = getImageUri(getApplicationContext(), bitmap);
 
                 // CALL THIS METHOD TO GET THE ACTUAL PATH
                 File finalFile = new File(getRealPathFromURI(tempUri));
                 Log.d(finalFile.toString(), "ok");
-                sendMessage(this.imageView,finalFile.toString());
+                sendMessage(finalFile.toString());
             }}
     }
 
-    public void sendMessage(View view, String path) {
+    // function used in TextToSpeech (prob better way to use it)
+    public static Context getApplicationContext2(){
+        return  context;
+    }
+
+    // function used to go from MainActivity to Main2Activity
+    public void sendMessage(String path) {
         Intent intent = new Intent(this, Main2Activity.class);
         bestpath = path;
         intent.putExtra(bestpath,path);
         startActivity(intent);
     }
 
+    // function used in onActivityResult()
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -237,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
         return Uri.parse(path);
     }
 
+    // function used in onActivityResult()
     public String getRealPathFromURI(Uri uri) {
         Cursor cursor = getContentResolver().query(uri, null, null, null, null);
         cursor.moveToFirst();
