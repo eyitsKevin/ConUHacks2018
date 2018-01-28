@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -39,30 +40,67 @@ public class MainActivity extends AppCompatActivity {
         button = findViewById(R.id.cameraButton);
 
         getPermissions();
-        button.setOnClickListener(new View.OnClickListener() {
-            int i=0;
+//        button.setOnClickListener(new View.OnClickListener() {
+//            int i=0;
+//            @Override
+//            public void onClick(View v) {
+//                // TODO Auto-generated method stub
+//                i++;
+//                Handler handler = new Handler();
+//                Runnable r = new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        i = 0;
+//                    }
+//                };
+//                if (i == 1) {
+//                    //Single click
+//                    handler.postDelayed(r, 250);
+//                } else if (i == 2) {
+//                    //Double click
+//                    i = 0;
+//
+//                }
+//            }
+//        });
+
+        button.setOnTouchListener(new OnSwipeTouchListener(context) {
             @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                i++;
-                Handler handler = new Handler();
-                Runnable r = new Runnable() {
-                    @Override
-                    public void run() {
-                        i = 0;
-                    }
-                };
-                if (i == 1) {
-                    //Single click
-                    handler.postDelayed(r, 250);
-                } else if (i == 2) {
-                    //Double click
-                    i = 0;
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(intent, 0);
-                }
+            public void onSwipeLeft() {
+                Main2Activity.runTextToSpeech(TextToSpeech.arrayList);
+                // if you want to handle the touch event
             }
-        });
+
+            @Override
+            public  void onSwipeRight(){
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, 0);
+
+            }
+                                  });
+
+//        button.setOnTouchListener(new View.OnTouchListener(){
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                switch(event.getAction()) {
+//                    case MotionEvent.ACTION_DOWN: {
+//                        Main2Activity.runTextToSpeech(TextToSpeech.arrayList);
+//                        return true; // if you want to handle the touch event
+//                    }
+//
+//                    case MotionEvent.: {
+//                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                        startActivityForResult(intent, 0);
+//                        return true; // if you want to handle the touch event
+//                    }
+//                    case MotionEvent.ACTION_CANCEL: {
+//                        // RELEASED
+//                        break;
+//                    }
+//                }
+//                return false;
+//            }
+//        });
     }
 
     public void getPermissions(){

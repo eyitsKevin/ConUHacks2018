@@ -12,8 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1"
-        android:background="@color/colorAccent"
-        android:text="Open Camera" />
+        android:background="@drawable/rubberducker"
+        android:text="Swipe left for replay/Swipe right for camera I will show you the wayyy....." />
+
 
 
 </LinearLayout>

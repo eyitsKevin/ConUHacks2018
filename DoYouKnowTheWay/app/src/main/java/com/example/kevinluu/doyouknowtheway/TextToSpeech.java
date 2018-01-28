@@ -15,6 +15,7 @@ import com.ibm.watson.developer_cloud.text_to_speech.v1.util.WaveUtils;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -29,7 +30,7 @@ public class TextToSpeech implements Runnable {
     com.ibm.watson.developer_cloud.text_to_speech.v1.TextToSpeech service;
     String filepath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/hello_world.wav";
     Context context;
-    static  List<Information> arrayList;
+    static ArrayList<Information> arrayList;
 
     @Override
     public void run() {
@@ -51,7 +52,7 @@ public class TextToSpeech implements Runnable {
         mp.start();
     }
 
-    public static void setArrayList(List<Information> arrayList2){
+    public static void setArrayList(ArrayList<Information> arrayList2){
          arrayList = arrayList2 ;
     }
 
