@@ -33,7 +33,8 @@ public class Main2Activity extends AppCompatActivity implements Runnable{
         String path = intent.getStringExtra(MainActivity.bestpath); // get the path of the picture from MainActivity
         apipath = path;
         (new Thread(new Main2Activity())).start(); // start the thread for the visual api
-
+        Intent intent1 = new Intent(this,MainActivity.class);
+        startActivity(intent1);
     }
 
     // run the thread used for visual recognition api
